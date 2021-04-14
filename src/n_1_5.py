@@ -26,19 +26,21 @@ for e in tw_strings:
     print(f'{len(ewf)}:{ewf[0:5]}')
 
 print(f'----問四----')
-result_list = []
-for e in tw_strings:
-    ew = e.split('\n')
-    for ewh in ew:
-        ewhf = ewh.split(' ')
-        for eh in ewhf:
-            ehs = eh.split('　')
-            for ehk in ehs:
-                if '#' in ehk:
-                    tag = ehk[1:]
-                    if not tag in result_list:
-                        result_list.append(ehk[1:])
-print(set(result_list)) 
+def get_hash_tag(tw_strings):
+    result_list = []
+    for e in tw_strings:
+        ew = e.split('\n')
+        for ewh in ew:
+            ewhf = ewh.split(' ')
+            for eh in ewhf:
+                ehs = eh.split('　')
+                for ehk in ehs:
+                    if '#' in ehk:
+                        tag = ehk[1:]
+                        if not tag in result_list:
+                            result_list.append(ehk[1:])
+    return set(result_list)
+print(get_hash_tag(tw_strings)) 
 print(f'----問五----')
 def get_urls(strings):
     res_list = []
@@ -48,7 +50,7 @@ def get_urls(strings):
         for es in ewh:
             eh = es.split('　')
             for ex in eh:
-                eg = ex.split('(')
+                eg = ex.split('（')
                 for ey in eg:
                     if 'https://' in ey or 'http://' in ey:
                         res_list.append(ey)
