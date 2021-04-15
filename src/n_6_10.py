@@ -1,4 +1,4 @@
-from 1_5 import 
+from n_1_5 import get_urls, get_hash_tag
 
 file_name = "../tw_strings.txt"
 f = open(file_name, "r")
@@ -26,10 +26,56 @@ print(ngram(3, s))
 
 print(f'----問八----')
 # tw_stringsを改行でわけ、#、URL及び不要単語を取り除き、5-gramの出現頻度を数える
-def devide_by_ret(s):
+def devide_by_tw(s):
   sw = s.split('\n')
   devided_tws = [swt for swt in sw if swt != '']
+  return devided_tws
 
-hash_list = 
+def exclude(s, rm_list):
+  for rms in rm_list:
+    s = s.replace(rms, '')
+  return s
 
-for 
+hash_list = get_hash_tag(tw_strings)
+ng_keys = ['\n','.','=',' ','　','#','(',')','-','/',':','？','、','。','！','「','」','_']
+ng_num = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '０', '１', '２', '３', '４', '５', '６', '７', '８', '９' ]
+ng_lowalp = ['a', 'b', 'c' ,'d', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',\
+'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+ng_upalp = ['A', 'B', 'C' ,'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',\
+'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+devided_tws = []
+url_list = []
+for tw in tw_strings:
+  url_list += get_urls(tw)
+  devided_tws.append(''.join(devide_by_tw(tw)))
+pgrams = []
+# devided_str = ''.join(devided_tws)
+for tw in devided_tws:
+  elem = exclude(tw, hash_list)
+  elem = exclude(elem, url_list)
+  elem = exclude(elem, ng_keys)
+  elem = exclude(elem, ng_lowalp)
+  elem = exclude(elem, ng_upalp)
+  elem = exclude(elem, ng_num)
+  pgrams += ngram(5, elem)
+
+result = {}
+for elem in pgrams:
+  if elem not in result:
+    result[elem] = 1
+  else:
+    result[elem] += 1
+print(sorted(result.items(), key=lambda x: -x[1])[:10])
+
+print(f'----問九----')
+string_1 = '駆け出しエンジニアと繋がりたい'
+string_2 = 'フルスタックエンジニアと繋がりたい'
+s1 = set(ngram(5, string_1))
+s2 = set(ngram(5, string_2))
+print(f'{s1}, {s2}')
+print(s1 | s2) # 和集合
+print(s1 & s2) # 積集合
+print(s1 - s2) # 差集合
+print(ngram(5, 'エンジニア')[0] in s1)
+print(ngram(5, 'エンジニア')[0] in s2)
